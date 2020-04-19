@@ -77,4 +77,52 @@ class Petugas extends Controller
 
         return response()->json(compact('user'));
     }
+
+    public function edit(Request $req, $id){
+        $validator = Validator::make($req->all(), [
+            'nama_petugas' => 'required',
+            'alamat' => 'required',
+            'level' => 'required',
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return Response()->json($validator->errors());
+        }
+
+        $edit = User::where('id', $id)->update([
+            'nama_petugas' => $req->nama_petugas,
+            'alamat' => $req->alamat,
+            'level' => $req->level,
+            'username' => $req->username,
+            'password' => $req->password
+        ]);
+
+        if($edit){
+            return Response()->json('BERHASIL');
+        } else {
+            return Response()->json('GAGAL');
+        }
+    }
+
+    public function hapus($id){
+        $hapus = User::where('id', $id)->delete();
+
+        if($hapus){
+            return Response()->json('BERHASIL');
+        } else {
+            return Response()->json('GAGAL');
+        }
+    }
+
+    public function show(){
+        $tampil = User::get();
+
+        if($tampil){
+            return Response()->json($tampil);
+        } else {
+            return Response()->json('DATA KOSONG');
+        }
+    }
 }
